@@ -1,0 +1,31 @@
+{
+  "name": "term-view",
+  "version": "0.0.1",
+  "description": "Poder ver facilmente una lista de archivos",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MisaZ10/term-view.git"
+  },
+  "keywords": [
+    "terminal",
+    "node.",
+    "view"
+  ],
+  "author": "Misael Zurdo <misaelzurdo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MisaZ10/term-view/issues"
+  },
+  "homepage": "https://github.com/MisaZ10/term-view#readme",
+  "dependencies": {
+    "args": "^5.0.0",
+    "blessed": "^0.1.81",
+    "blessed-contrib": "^4.8.5",
+    "minimist": "^1.2.0",
+    "moment": "^2.22.2"
+  }
+}
