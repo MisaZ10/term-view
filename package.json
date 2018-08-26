@@ -3,8 +3,10 @@
   "version": "0.0.1",
   "description": "Poder ver facilmente una lista de archivos",
   "main": "index.js",
+  "bin": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint-fix": "standard --fix",
+    "lint": "standard"
   },
   "repository": {
     "type": "git",
@@ -23,9 +25,12 @@
   "homepage": "https://github.com/MisaZ10/term-view#readme",
   "dependencies": {
     "args": "^5.0.0",
+    "awk": "^1.0.0",
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.8.5",
-    "minimist": "^1.2.0",
     "moment": "^2.22.2"
+  },
+  "devDependencies": {
+    "standard": "^11.0.1"
   }
 }
