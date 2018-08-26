@@ -4,8 +4,18 @@
 
 const blessed = require('blessed')
 const contrib = require('blessed-contrib')
-const args = require('./lib/create-args')
-console.log(args)
+const chalk = require('chalk')
+const createArgs = require('./lib/create-args')
+const list = require('./lib/create-list')
+function handleFatalError(err) {
+  console.error(`${chalk.red('[fatal error]')} ${err.message}`)
+  process.exit(1)
+}
+process.on('uncaughtException', handleFatalError)
+process.on('unhandledRejection', handleFatalError)
+const args = createArgs()
+list(args)
+
 return
 
 const screen = blessed.screen()
@@ -34,13 +44,6 @@ screen.key(['escape', 'C-c'], (ch, key) => {
   }
   lastKey = key.full
 })
-function handleFatalError(err) {
-  console.error(`${chalk.red('[fatal error]')} ${err.message}`)
-  console.error(err.stack)
-  process.exit(1)
-}
-process.on('uncaughtException', handleFatalError)
-process.on('unhandledRejection', handleFatalError)
 
 // tree.focus()
 // screen.render()
