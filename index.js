@@ -26,9 +26,6 @@ const tree = grid.set(0, 0, 1, 1, contrib.tree, {
 const box = grid.set(0, 1, 1, 3, blessed.box, {
   content: 'My Box'
 })
-const box2 = grid.set(0, 1, 1, 3, blessed.box, {
-  content: 'My asdfasdf'
-})
 tree.on('select', node => {
   console.log('Node ', node)
 })
