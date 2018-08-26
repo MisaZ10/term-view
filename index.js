@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 'use strict'
 /* eslint new-cap: "off" */
-
 const blessed = require('blessed')
 const contrib = require('blessed-contrib')
 const chalk = require('chalk')
 const createArgs = require('./lib/create-args')
 const list = require('./lib/create-list')
-function handleFatalError(err) {
+
+function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
   process.exit(1)
 }
@@ -15,6 +15,7 @@ process.on('uncaughtException', handleFatalError)
 process.on('unhandledRejection', handleFatalError)
 const screen = blessed.screen()
 let lastKey = ''
+let listElems = []
 const grid = new contrib.grid({
   rows: 1,
   cols: 4,
@@ -23,11 +24,9 @@ const grid = new contrib.grid({
 const tree = grid.set(0, 0, 1, 1, contrib.tree, {
   label: 'Files List'
 })
-const box = grid.set(0, 1, 1, 3, blessed.box, {
-  content: 'My Box'
-})
 tree.on('select', node => {
-  console.log('Node ', node)
+  const elem = listElems[node.index]
+  renderBox(JSON.stringify(elem))
 })
 screen.key(['escape', 'C-c'], (ch, key) => {
   if (lastKey === 'C-c' && key.full === 'C-c') {
@@ -39,16 +38,24 @@ screen.key(['escape', 'C-c'], (ch, key) => {
   lastKey = key.full
 })
 
-function renderTree(list) {
+function renderBox (text) {
+  grid.set(0, 1, 1, 3, blessed.box, {
+    content: text
+  })
+  screen.render()
+}
+function renderTree (list) {
   const treeData = {}
-  list.forEach(elem => {
+  list.forEach((elem, index) => {
     const type = elem.isFile ? 'File' : 'Directory'
 
     const title = ` ${type}:  ${elem.fullname}`
     treeData[title] = {
-      isFile: elem.isFile
+      isFile: elem.isFile,
+      index
     }
   })
+  renderBox(JSON.stringify(treeData))
   tree.setData({
     extended: true,
     children: treeData
@@ -56,10 +63,11 @@ function renderTree(list) {
 
   screen.render()
 }
-async function init() {
+async function init () {
   const args = createArgs()
-  const listFiles = await list(args)
-  renderTree(listFiles)
+  listElems = await list(args)
+  renderTree(listElems)
+
   tree.focus()
   screen.render()
 }
