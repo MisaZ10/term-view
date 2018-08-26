@@ -13,11 +13,6 @@ function handleFatalError(err) {
 }
 process.on('uncaughtException', handleFatalError)
 process.on('unhandledRejection', handleFatalError)
-const args = createArgs()
-list(args)
-
-return
-
 const screen = blessed.screen()
 let lastKey = ''
 const grid = new contrib.grid({
@@ -28,10 +23,12 @@ const grid = new contrib.grid({
 const tree = grid.set(0, 0, 1, 1, contrib.tree, {
   label: 'Files List'
 })
-const box = grid.set(0, 1, 1, 3, blessed.box, { 
-	content: 'My Box'
+const box = grid.set(0, 1, 1, 3, blessed.box, {
+  content: 'My Box'
 })
-
+const box2 = grid.set(0, 1, 1, 3, blessed.box, {
+  content: 'My asdfasdf'
+})
 tree.on('select', node => {
   console.log('Node ', node)
 })
@@ -45,5 +42,29 @@ screen.key(['escape', 'C-c'], (ch, key) => {
   lastKey = key.full
 })
 
-// tree.focus()
-// screen.render()
+function renderTree(list) {
+  const treeData = {}
+  list.forEach(elem => {
+    const type = elem.isFile ? 'File' : 'Directory'
+
+    const title = ` ${type}:  ${elem.fullname}`
+    treeData[title] = {
+      isFile: elem.isFile
+    }
+  })
+  tree.setData({
+    extended: true,
+    children: treeData
+  })
+
+  screen.render()
+}
+async function init() {
+  const args = createArgs()
+  const listFiles = await list(args)
+  renderTree(listFiles)
+  tree.focus()
+  screen.render()
+}
+
+init()
