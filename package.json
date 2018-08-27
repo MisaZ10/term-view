@@ -27,8 +27,6 @@
     "args": "^5.0.0",
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.8.5",
-    "console-png": "^1.2.1",
-    "got": "^9.1.0",
     "moment": "^2.22.2",
     "terminal-image": "^0.1.1"
   },

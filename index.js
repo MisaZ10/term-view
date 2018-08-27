@@ -6,15 +6,13 @@ const contrib = require('blessed-contrib')
 const chalk = require('chalk')
 const createArgs = require('./lib/create-args')
 const list = require('./lib/create-list')
-const terminalImage = require('terminal-image');
-const got = require('got');
-const pngStringify = require('console-png');
-const fs = require('fs');
+const terminalImage = require('terminal-image')
 
 function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
   process.exit(1)
 }
+
 process.on('uncaughtException', handleFatalError)
 process.on('unhandledRejection', handleFatalError)
 const screen = blessed.screen()
@@ -56,37 +54,29 @@ function renderBox (text) {
     tags: true,
     border: {
       type: 'line'
-    },
+    }
   })
   screen.render()
 }
-async function renderImg(fullPath) {
-  // console.log('renderImg', fullPath);
-  // const { body } = await got(fullPath, { encoding: null });
-  // const content = await terminalImage.buffer(body)
-  // console.log('content', content);
-  const image = fs.readFileSync(fullPath)
-
-  pngStringify(image, function (err, content) {
-    if (err) throw err;
-    grid.set(0, 1, 1, 3, blessed.box, {
-      content,
-      top: 'center',
-      left: 'center',
-      tags: true,
-      border: {
-        type: 'line'
-      },
-    })
+async function renderImg (fullPath) {
+  const content = await terminalImage.file(fullPath)
+  grid.set(0, 1, 1, 3, blessed.box, {
+    content,
+    top: 'center',
+    left: 'center',
+    tags: true,
+    border: {
+      type: 'line'
+    }
   })
-
+  screen.render()
 }
 function renderTree (list) {
   const treeData = {}
   list.forEach((elem, index) => {
     const type = elem.isFile ? 'File' : 'Directory'
-
     const title = ` ${type}:  ${elem.fullname}`
+
     treeData[title] = {
       isFile: elem.isFile,
       index
@@ -104,7 +94,6 @@ async function init () {
   const args = createArgs()
   listElems = await list(args)
   renderTree(listElems)
-
   tree.focus()
   screen.render()
 }
