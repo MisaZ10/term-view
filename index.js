@@ -6,6 +6,10 @@ const contrib = require('blessed-contrib')
 const chalk = require('chalk')
 const createArgs = require('./lib/create-args')
 const list = require('./lib/create-list')
+const terminalImage = require('terminal-image');
+const got = require('got');
+const pngStringify = require('console-png');
+const fs = require('fs');
 
 function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
@@ -56,13 +60,26 @@ function renderBox (text) {
   })
   screen.render()
 }
-function renderImg(fullPath) {
-  console.log('fullPath', fullPath)
-  grid.set(0, 1, 1, 3, contrib.picture, {
-    file: fullPath,
-    cols: 25,
-    onReady: () => screen.render()
+async function renderImg(fullPath) {
+  // console.log('renderImg', fullPath);
+  // const { body } = await got(fullPath, { encoding: null });
+  // const content = await terminalImage.buffer(body)
+  // console.log('content', content);
+  const image = fs.readFileSync(fullPath)
+
+  pngStringify(image, function (err, content) {
+    if (err) throw err;
+    grid.set(0, 1, 1, 3, blessed.box, {
+      content,
+      top: 'center',
+      left: 'center',
+      tags: true,
+      border: {
+        type: 'line'
+      },
+    })
   })
+
 }
 function renderTree (list) {
   const treeData = {}
