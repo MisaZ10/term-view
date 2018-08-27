@@ -26,7 +26,13 @@ const tree = grid.set(0, 0, 1, 1, contrib.tree, {
 })
 tree.on('select', node => {
   const elem = listElems[node.index]
-  renderBox(JSON.stringify(elem))
+  if (elem.isFile && elem._isImg) {
+    return renderImg(elem.path)
+  }
+  if (elem.isFile) {
+    return renderBox(elem.text)
+  }
+  renderBox('No es un archivo')
 })
 screen.key(['escape', 'C-c'], (ch, key) => {
   if (lastKey === 'C-c' && key.full === 'C-c') {
@@ -40,9 +46,23 @@ screen.key(['escape', 'C-c'], (ch, key) => {
 
 function renderBox (text) {
   grid.set(0, 1, 1, 3, blessed.box, {
-    content: text
+    content: text,
+    top: 'center',
+    left: 'center',
+    tags: true,
+    border: {
+      type: 'line'
+    },
   })
   screen.render()
+}
+function renderImg(fullPath) {
+  console.log('fullPath', fullPath)
+  grid.set(0, 1, 1, 3, contrib.picture, {
+    file: fullPath,
+    cols: 25,
+    onReady: () => screen.render()
+  })
 }
 function renderTree (list) {
   const treeData = {}

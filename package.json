@@ -25,7 +25,6 @@
   "homepage": "https://github.com/MisaZ10/term-view#readme",
   "dependencies": {
     "args": "^5.0.0",
-    "awk": "^1.0.0",
     "blessed": "^0.1.81",
     "blessed-contrib": "^4.8.5",
     "moment": "^2.22.2"
