@@ -6,7 +6,6 @@ const contrib = require('blessed-contrib')
 const chalk = require('chalk')
 const createArgs = require('./lib/create-args')
 const list = require('./lib/create-list')
-const terminalImage = require('terminal-image')
 
 function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
@@ -16,6 +15,7 @@ function handleFatalError (err) {
 process.on('uncaughtException', handleFatalError)
 process.on('unhandledRejection', handleFatalError)
 const screen = blessed.screen()
+let itemSelected
 let lastKey = ''
 let listElems = []
 const grid = new contrib.grid({
@@ -24,17 +24,12 @@ const grid = new contrib.grid({
   screen
 })
 const tree = grid.set(0, 0, 1, 1, contrib.tree, {
-  label: 'Files List'
+  label: 'Files List',
+  keys: ['+', 'space', 'enter', 'up', 'down']
 })
 tree.on('select', node => {
-  const elem = listElems[node.index]
-  if (elem.isFile && elem._isImg) {
-    return renderImg(elem.path)
-  }
-  if (elem.isFile) {
-    return renderBox(elem.text)
-  }
-  renderBox('No es un archivo')
+  itemSelected = listElems[node.index]
+  return renderBox(itemSelected)
 })
 screen.key(['escape', 'C-c'], (ch, key) => {
   if (lastKey === 'C-c' && key.full === 'C-c') {
@@ -46,31 +41,27 @@ screen.key(['escape', 'C-c'], (ch, key) => {
   lastKey = key.full
 })
 
-function renderBox (text) {
+function renderBox (item) {
   grid.set(0, 1, 1, 3, blessed.box, {
-    content: text,
+    content: item.content,
     top: 'center',
     left: 'center',
-    tags: true,
+    width: '5%',
+    height: '5%',
     border: {
       type: 'line'
+    },
+    style: {
+      focus: {
+        border: {
+          fg: '#f0f0f0'
+        }
+      }
     }
   })
   screen.render()
 }
-async function renderImg (fullPath) {
-  const content = await terminalImage.file(fullPath)
-  grid.set(0, 1, 1, 3, blessed.box, {
-    content,
-    top: 'center',
-    left: 'center',
-    tags: true,
-    border: {
-      type: 'line'
-    }
-  })
-  screen.render()
-}
+
 function renderTree (list) {
   const treeData = {}
   list.forEach((elem, index) => {
@@ -97,5 +88,16 @@ async function init () {
   tree.focus()
   screen.render()
 }
-
+screen.key('right', async () => {
+  if (itemSelected && itemSelected.isFile) {
+    await itemSelected.nextLines()
+    renderBox(itemSelected)
+  }
+})
+screen.key('left', async () => {
+  if (itemSelected && itemSelected.isFile) {
+    await itemSelected.previusLines()
+    renderBox(itemSelected)
+  }
+})
 init()
