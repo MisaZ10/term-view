@@ -9,7 +9,7 @@ const list = require('./lib/create-list')
 
 function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
-  // process.exit(1)
+  process.exit(1)
 }
 
 process.on('uncaughtException', handleFatalError)
