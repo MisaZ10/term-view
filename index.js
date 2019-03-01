@@ -9,7 +9,7 @@ const list = require('./lib/create-list')
 
 function handleFatalError (err) {
   console.error(`${chalk.red('[fatal error]')} ${err.message}`)
-  process.exit(1)
+  // process.exit(1)
 }
 
 process.on('uncaughtException', handleFatalError)
@@ -41,24 +41,28 @@ screen.key(['escape', 'C-c'], (ch, key) => {
   lastKey = key.full
 })
 
+let box
 function renderBox (item) {
-  grid.set(0, 1, 1, 3, blessed.box, {
-    content: item.content,
-    top: 'center',
-    left: 'center',
-    width: '5%',
-    height: '5%',
-    border: {
-      type: 'line'
-    },
-    style: {
-      focus: {
-        border: {
-          fg: '#f0f0f0'
+  if(!box){
+    box = grid.set(0, 1, 1, 3, blessed.box, {
+      content: item.content,
+      top: 'center',
+      left: 'center',
+      width: '5%',
+      height: '5%',
+      border: {
+        type: 'line'
+      },
+      style: {
+        focus: {
+          border: {
+            fg: '#f0f0f0'
+          }
         }
       }
-    }
-  })
+    })
+  }
+  box.setContent(item.content);
   screen.render()
 }
 
