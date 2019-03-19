@@ -14,6 +14,7 @@ function handleFatalError (err) {
 
 process.on('uncaughtException', handleFatalError)
 process.on('unhandledRejection', handleFatalError)
+
 const screen = blessed.screen()
 let itemSelected
 let lastKey = ''
@@ -43,7 +44,7 @@ screen.key(['escape', 'C-c'], (ch, key) => {
 
 let box
 function renderBox (item) {
-  if(!box){
+  if (!box) {
     box = grid.set(0, 1, 1, 3, blessed.box, {
       content: item.content,
       top: 'center',
@@ -62,7 +63,7 @@ function renderBox (item) {
       }
     })
   }
-  box.setContent(item.content);
+  box.setContent(item.content)
   screen.render()
 }
 
@@ -104,4 +105,6 @@ screen.key('left', async () => {
     renderBox(itemSelected)
   }
 })
+
 init()
+  .catch(handleFatalError)
