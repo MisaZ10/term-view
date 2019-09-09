@@ -3,7 +3,9 @@
   "version": "0.0.1",
   "description": "Poder ver facilmente una lista de archivos",
   "main": "index.js",
-  "bin": "index.js",
+  "bin": {
+    "term-view": "index.js"
+  },
   "scripts": {
     "lint-fix": "standard --fix",
     "lint": "standard"
@@ -26,7 +28,7 @@
   "dependencies": {
     "args": "^5.0.0",
     "blessed": "^0.1.81",
-    "blessed-contrib": "^4.8.5",
+    "blessed-contrib": "^4.8.16",
     "kigi": "^1.1.0",
     "moment": "^2.22.2",
     "terminal-image": "^0.1.1"
