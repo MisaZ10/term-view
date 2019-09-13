@@ -31,6 +31,7 @@
     "blessed-contrib": "^4.8.16",
     "cli-highlight": "^2.1.1",
     "kigi": "^1.1.0",
+    "lang-map": "^0.4.0",
     "moment": "^2.22.2",
     "terminal-image": "^0.1.1"
   },
