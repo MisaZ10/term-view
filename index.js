@@ -7,8 +7,10 @@ const contrib = require('blessed-contrib')
 const chalk = require('chalk')
 const createArgs = require('./lib/create-args')
 const createList = require('./lib/create-list')
+const screen = blessed.screen()
 
 function handleFatalError (err) {
+  screen.destroy()
   console.error(`${chalk.red('[fatal error]')} ${err.message} \n${err.stack}`)
   process.exit(1)
 }
@@ -16,7 +18,6 @@ function handleFatalError (err) {
 process.on('uncaughtException', handleFatalError)
 process.on('unhandledRejection', handleFatalError)
 
-const screen = blessed.screen()
 let lastKey = ''
 
 const lists = []
